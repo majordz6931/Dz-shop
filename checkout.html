@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>إتمام الطلب | DZ SHOP</title>
+<link rel="stylesheet" href="style.css">
+<style>
+body{min-height:100vh}.checkoutPage{max-width:1000px;width:92%;margin:35px auto 60px}.back{display:inline-block;margin-bottom:18px;color:#0b7a3b;font-weight:bold}.checkoutGrid{display:grid;grid-template-columns:1.2fr .8fr;gap:20px}.box{background:#fff;border:1px solid #e4e9e6;border-radius:24px;padding:25px;box-shadow:0 10px 30px #07110c08}.box h1{font-size:26px;margin-bottom:7px}.muted{color:#68746d;font-size:13px;margin-bottom:22px}.field{margin-bottom:16px}.field label{display:block;font-weight:bold;font-size:13px;margin-bottom:7px}.field input,.field textarea{width:100%;border:1px solid #dfe6e1;border-radius:13px;padding:13px;outline:0;background:#fafcfb}.field input:focus,.field textarea:focus{border-color:#0b7a3b}.payment{display:grid;gap:10px;margin-bottom:20px}.payment label{display:flex;align-items:center;gap:10px;padding:15px;border:1px solid #e1e7e3;border-radius:15px;cursor:pointer}.payment label:has(input:checked){border-color:#0b7a3b;background:#effaf3}.payInfo{background:#f4f8f5;border-radius:15px;padding:15px;font-size:12px;margin-bottom:18px}.upload{border:2px dashed #b9c9be;border-radius:15px;padding:22px;text-align:center}.upload input{margin-top:10px}.submit{width:100%;background:#0b7a3b;color:#fff;padding:15px;border-radius:14px;font-weight:bold;font-size:16px}.orderList{display:grid;gap:12px}.orderItem{display:flex;gap:10px;align-items:center;border-bottom:1px solid #edf0ee;padding-bottom:12px}.orderItem img{width:58px;height:58px;object-fit:cover;border-radius:12px}.orderItem small{display:block;color:#68746d;margin-top:4px}.sum{display:flex;justify-content:space-between;margin-top:20px;font-size:18px}.success{display:none;text-align:center;padding:35px}.success.show{display:block}.success .icon{font-size:55px}.emptyOrder{text-align:center;color:#68746d;padding:30px}@media(max-width:750px){.checkoutGrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="top">🇩🇿 DZ SHOP • إتمام الطلب بأمان</div>
+<div class="checkoutPage">
+<a class="back" href="index.html">← العودة إلى المتجر</a>
+<div id="formView">
+<div class="checkoutGrid">
+<section class="box">
+<h1>إتمام الطلب</h1><p class="muted">أدخل معلوماتك ثم أرسل إثبات الدفع.</p>
+<div class="field"><label>البريد الإلكتروني *</label><input id="email" type="email" placeholder="example@email.com" required></div>
+<div class="field"><label>ملاحظات الطلب</label><textarea id="note" rows="3" placeholder="أي ملاحظة إضافية..."></textarea></div>
+<h3>طريقة الدفع</h3>
+<div class="payment">
+<label><input type="radio" name="pay" value="binance" checked> 🟡 Binance Pay</label>
+<label><input type="radio" name="pay" value="usdt"> 🪙 USDT / BSC (BEP20)</label>
+</div>
+<div class="payInfo" id="payInfo">اختر طريقة الدفع واتبع تعليمات الدفع الخاصة بالمتجر.</div>
+<div class="upload"><b>📷 إثبات الدفع</b><p class="muted">ارفع صورة التحويل بعد الدفع</p><input id="proof" type="file" accept="image/*"></div>
+<br>
+<button class="submit" id="submit">تأكيد وإرسال الطلب</button>
+</section>
+<section class="box">
+<h2>ملخص الطلب</h2><div id="orderList" class="orderList"></div><div class="sum"><b>المجموع</b><b id="orderTotal">0 دج</b></div>
+</section>
+</div></div>
+<div class="box success" id="success"><div class="icon">✅</div><h1>تم إرسال طلبك</h1><p class="muted">تم تسجيل معلومات الطلب. سنتواصل معك عبر البريد الإلكتروني.</p><a class="submit" style="display:block" href="index.html">العودة إلى المتجر</a></div>
+</div>
+<script>
+const cart=JSON.parse(localStorage.getItem("dz_cart")||"[]"),money=n=>Number(n).toLocaleString("fr-DZ")+" دج";
+const list=document.getElementById("orderList"),sum=document.getElementById("orderTotal");
+if(!cart.length){list.innerHTML='<div class="emptyOrder">السلة فارغة.<br><br><a class="back" href="index.html">العودة للمتجر</a></div>'}
+else{list.innerHTML=cart.map(p=>'<div class="orderItem"><img src="'+p.img+'"><div><b>'+p.name+'</b><small>'+money(p.price)+'</small></div></div>').join("");sum.textContent=money(cart.reduce((s,p)=>s+Number(p.price),0))}
+document.querySelectorAll('input[name="pay"]').forEach(x=>x.onchange=()=>document.getElementById("payInfo").textContent=x.value==="binance"?"ادفع المبلغ عبر Binance Pay ثم ارفع صورة إثبات الدفع.":"ادفع المبلغ عبر USDT على شبكة BSC (BEP20) ثم ارفع صورة إثبات الدفع.");
+document.getElementById("submit").onclick=()=>{const email=document.getElementById("email").value.trim(),proof=document.getElementById("proof").files[0];if(!email||!email.includes("@"))return alert("أدخل بريدًا إلكترونيًا صحيحًا.");if(!cart.length)return alert("السلة فارغة.");if(!proof)return alert("ارفع صورة إثبات الدفع.");document.getElementById("formView").style.display="none";document.getElementById("success").classList.add("show");localStorage.removeItem("dz_cart")};
+</script>
+</body></html>
