@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>لوحة تحكم DZ SHOP</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.adminPage{max-width:1050px;width:92%;margin:30px auto 60px}.adminBox{background:#fff;border:1px solid #e4e9e6;border-radius:24px;padding:24px;margin-bottom:18px;box-shadow:0 10px 30px #07110c08}.adminBox h1{margin:0 0 8px}.muted{color:#68746d;font-size:13px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.field label{display:block;font-weight:bold;font-size:13px;margin-bottom:7px}.field input{width:100%;border:1px solid #dfe6e1;border-radius:13px;padding:12px;box-sizing:border-box}.productRow{display:grid;grid-template-columns:70px 1fr 1.5fr;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid #edf0ee}.productRow img{width:70px;height:70px;object-fit:cover;border-radius:14px}.save{background:#0b7a3b;color:#fff;border:0;padding:14px 22px;border-radius:14px;font-weight:bold;cursor:pointer}.reset{background:#eef3ef;color:#163d28;border:0;padding:14px 22px;border-radius:14px;font-weight:bold;cursor:pointer}.status{margin-top:12px;font-weight:bold}.link{color:#0b7a3b}.note{background:#fff8df;border:1px solid #f0d98a;padding:14px;border-radius:14px;line-height:1.7;font-size:13px}@media(max-width:700px){.grid,.productRow{grid-template-columns:1fr}.productRow img{width:60px;height:60px}}
+</style>
+</head>
+<body>
+<div class="top">🇩🇿 DZ SHOP • لوحة التحكم</div>
+<div class="adminPage">
+<a class="link" href="index.html">← العودة إلى المتجر</a>
+<section class="adminBox">
+<h1>⚙️ إعدادات الدفع والتوصيل</h1>
+<p class="muted">ضع رابط Binance Pay لكل منتج وحدد شرط التوصيل المجاني.</p>
+<div class="grid">
+<div class="field"><label>سعر 1 USDT بالدينار الجزائري</label><input id="rate" type="number" min="1" step="0.01"></div>
+<div class="field"><label>التوصيل المجاني ابتداءً من (USDT)</label><input id="threshold" type="number" min="0" step="0.01"></div>
+<div class="field"><label>سعر التوصيل العادي (دج)</label><input id="shipping" type="number" min="0" step="1"></div>
+</div>
+</section>
+<section class="adminBox">
+<h2>🔗 روابط Binance Pay للمنتجات</h2>
+<div id="products"></div>
+</section>
+<section class="adminBox">
+<div class="note">⚠️ هذه اللوحة تعمل حاليًا بتخزين المتصفح (localStorage). يعني الإعدادات المحفوظة هنا تظهر على نفس الجهاز/المتصفح فقط، وليست قاعدة بيانات عامة لكل الزبائن. لا تضع أي API Key أو كلمة سر Binance هنا.</div>
+<br>
+<button class="save" id="save">💾 حفظ الإعدادات</button>
+<button class="reset" id="reset">إعادة الإعدادات</button>
+<div class="status" id="status"></div>
+</section>
+</div>
+<script>
+const products=[
+{id:1,name:"شاحن سريع USB-C 30W",img:"https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&w=700&q=80"},
+{id:2,name:"سماعات لاسلكية Premium",img:"https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?auto=format&fit=crop&w=700&q=80"},
+{id:3,name:"لوحة مفاتيح Gaming RGB",img:"https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=700&q=80"},
+{id:4,name:"مصباح LED ذكي",img:"https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=700&q=80"},
+{id:5,name:"حامل هاتف للسيارة",img:"https://images.unsplash.com/photo-1523206489230-c012c64b2b48?auto=format&fit=crop&w=700&q=80"},
+{id:6,name:"ساعة ذكية Sport",img:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=80"},
+{id:7,name:"حقيبة ظهر عملية",img:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=700&q=80"},
+{id:8,name:"شاحن سيارة Dual USB",img:"https://images.unsplash.com/photo-1617886322168-72b886573c90?auto=format&fit=crop&w=700&q=80"}];
+const defaults={rate:256,threshold:10,shipping:0,links:{}};
+let cfg={...defaults,...JSON.parse(localStorage.getItem("dz_admin_config")||"{}")};
+cfg.links={...defaults.links,...(cfg.links||{})};
+document.getElementById("rate").value=cfg.rate;
+document.getElementById("threshold").value=cfg.threshold;
+document.getElementById("shipping").value=cfg.shipping;
+document.getElementById("products").innerHTML=products.map(p=>`<div class="productRow"><img src="${p.img}" alt=""><div><b>#${p.id} — ${p.name}</b></div><input data-id="${p.id}" type="url" placeholder="https://pay.binance.com/..." value="${cfg.links[p.id]||""}"></div>`).join("");
+document.getElementById("save").onclick=()=>{
+const links={};document.querySelectorAll("[data-id]").forEach(i=>links[i.dataset.id]=i.value.trim());
+const next={rate:Number(document.getElementById("rate").value)||256,threshold:Number(document.getElementById("threshold").value)||10,shipping:Math.max(0,Number(document.getElementById("shipping").value)||0),links};
+localStorage.setItem("dz_admin_config",JSON.stringify(next));cfg=next;
+document.getElementById("status").textContent="✅ تم حفظ الإعدادات على هذا الجهاز.";
+};
+document.getElementById("reset").onclick=()=>{localStorage.removeItem("dz_admin_config");location.reload()};
+</script>
+</body></html>
