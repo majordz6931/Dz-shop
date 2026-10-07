@@ -5,13 +5,20 @@ const grid=document.getElementById("productsGrid"),count=document.getElementById
 let cart=JSON.parse(localStorage.getItem("dz_cart")||"[]");
 
 async function loadProducts(){
- const {data,error}=await window.supabaseClient.from("products").select("*").eq("active",true).order("sort_order",{ascending:true});
- products=(error||!data?.length)?defaultProducts:data.map(p=>({
+ try{
+  if(!window.supabaseClient) throw new Error("Supabase client unavailable");
+  const {data,error}=await window.supabaseClient.from("products").select("*").eq("active",true).order("sort_order",{ascending:true});
+  if(error) throw error;
+  products=data?.length?data.map(p=>({
    id:p.id,name:p.name,cat:p.category,price:Number(p.price),old:Number(p.old_price||0),
    tag:p.tag||"جديد",img:p.image_url,
    imgs:Array.isArray(p.image_urls)&&p.image_urls.length?p.image_urls:[p.image_url],
    binance_pay_url:p.binance_pay_url||""
- }));
+  })):defaultProducts;
+ }catch(e){
+  console.error("DZ SHOP: failed to load products from Supabase:",e);
+  products=defaultProducts;
+ }
  render();update();
 }
 function render(list=products){
