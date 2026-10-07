@@ -1,78 +1,73 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>لوحة تحكم DZ SHOP</title>
-<link rel="stylesheet" href="style.css">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>لوحة تحكم DZ SHOP</title><link rel="stylesheet" href="style.css">
 <style>
-.adminPage{max-width:1050px;width:92%;margin:30px auto 60px}.adminBox{background:#fff;border:1px solid #e4e9e6;border-radius:24px;padding:24px;margin-bottom:18px;box-shadow:0 10px 30px #07110c08}.adminBox h1{margin:0 0 8px}.muted{color:#68746d;font-size:13px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.field label{display:block;font-weight:bold;font-size:13px;margin-bottom:7px}.field input{width:100%;border:1px solid #dfe6e1;border-radius:13px;padding:12px;box-sizing:border-box}.productRow{display:grid;grid-template-columns:70px 1fr 1.5fr;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid #edf0ee}.productRow img{width:70px;height:70px;object-fit:cover;border-radius:14px}.save{background:#0b7a3b;color:#fff;border:0;padding:14px 22px;border-radius:14px;font-weight:bold;cursor:pointer}.reset{background:#eef3ef;color:#163d28;border:0;padding:14px 22px;border-radius:14px;font-weight:bold;cursor:pointer}.status{margin-top:12px;font-weight:bold}.link{color:#0b7a3b}.note{background:#fff8df;border:1px solid #f0d98a;padding:14px;border-radius:14px;line-height:1.7;font-size:13px}@media(max-width:700px){.grid,.productRow{grid-template-columns:1fr}.productRow img{width:60px;height:60px}}
+.adminPage{max-width:1100px;width:92%;margin:30px auto 60px}.adminBox{background:#fff;border:1px solid #e4e9e6;border-radius:24px;padding:24px;margin-bottom:18px;box-shadow:0 10px 30px #07110c08}.muted{color:#68746d;font-size:13px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.field label{display:block;font-weight:bold;font-size:13px;margin-bottom:7px}.field input,.field select{width:100%;box-sizing:border-box;border:1px solid #dfe6e1;border-radius:13px;padding:12px;background:#fafcfb}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.save,.primary{background:#0b7a3b;color:#fff;border:0;padding:13px 20px;border-radius:13px;font-weight:bold;cursor:pointer}.reset,.secondary{background:#eef3ef;color:#163d28;border:0;padding:13px 20px;border-radius:13px;font-weight:bold;cursor:pointer}.danger{background:#fff0f0;color:#b42318;border:1px solid #ffd0d0;padding:9px 13px;border-radius:10px;font-weight:bold;cursor:pointer}.productAdmin{border:1px solid #e8ede9;border-radius:18px;padding:14px;margin-top:12px}.productHead{display:flex;align-items:center;gap:12px}.productHead img{width:65px;height:65px;object-fit:cover;border-radius:13px}.productFields{display:grid;grid-template-columns:2fr 1fr 1fr 1.2fr;gap:10px;margin-top:12px}.link{color:#0b7a3b;font-weight:bold}.note{background:#fff8df;border:1px solid #f0d98a;padding:14px;border-radius:14px;line-height:1.7;font-size:13px}.status{margin-top:12px;font-weight:bold;min-height:20px}.empty{text-align:center;color:#68746d;padding:20px}@media(max-width:750px){.grid,.productFields{grid-template-columns:1fr}.adminPage{width:94%}}
 </style>
 </head>
 <body>
 <div id="adminLogin" style="position:fixed;inset:0;background:#07110c;display:flex;align-items:center;justify-content:center;z-index:99999;padding:20px;box-sizing:border-box">
 <div style="background:#fff;width:min(420px,100%);padding:28px;border-radius:24px;box-shadow:0 20px 60px #0008;text-align:center">
-<div style="font-size:42px">🔐</div><h2 style="margin:10px 0 6px">دخول لوحة التحكم</h2>
-<p style="color:#68746d;font-size:14px">أدخل كلمة السر للمتابعة</p>
+<div style="font-size:42px">🔐</div><h2>دخول لوحة التحكم</h2><p class="muted">أدخل كلمة السر للمتابعة</p>
 <input id="adminPassword" type="password" autocomplete="current-password" placeholder="كلمة السر" style="width:100%;box-sizing:border-box;padding:14px;border:1px solid #dfe6e1;border-radius:13px;margin:10px 0">
-<button id="loginBtn" style="width:100%;background:#0b7a3b;color:#fff;border:0;padding:14px;border-radius:13px;font-weight:bold;cursor:pointer">دخول</button>
-<div id="loginError" style="color:#c62828;font-weight:bold;margin-top:10px;min-height:20px"></div>
+<button id="loginBtn" class="primary" style="width:100%">دخول</button><div id="loginError" style="color:#c62828;font-weight:bold;margin-top:10px;min-height:20px"></div>
 </div></div>
-<div id="adminApp" style="display:none">
-<div class="top">🇩🇿 DZ SHOP • لوحة التحكم</div>
-<div class="adminPage">
+<div id="adminApp" style="display:none"><div class="top">🇩🇿 DZ SHOP • لوحة التحكم</div><div class="adminPage">
 <a class="link" href="index.html">← العودة إلى المتجر</a>
-<section class="adminBox">
-<h1>⚙️ إعدادات الدفع والتوصيل</h1>
-<p class="muted">ضع رابط Binance Pay لكل منتج وحدد شرط التوصيل المجاني.</p>
+
+<section class="adminBox"><h1>📦 إدارة المنتجات</h1><p class="muted">أضف الهواتف والإلكترونيات وأي منتجات تريد بيعها.</p>
 <div class="grid">
-<div class="field"><label>سعر 1 USDT بالدينار الجزائري</label><input id="rate" type="number" min="1" step="0.01"></div>
-<div class="field"><label>التوصيل المجاني ابتداءً من (USDT)</label><input id="threshold" type="number" min="0" step="0.01"></div>
-<div class="field"><label>سعر التوصيل العادي (دج)</label><input id="shipping" type="number" min="0" step="1"></div>
+<div class="field"><label>اسم المنتج *</label><input id="pName" placeholder="مثال: iPhone 15 Pro"></div>
+<div class="field"><label>التصنيف</label><select id="pCat"><option value="electronics">إلكترونيات</option><option value="phones">هواتف</option><option value="home">المنزل</option><option value="gaming">Gaming</option><option value="auto">السيارات</option><option value="fashion">أزياء</option></select></div>
+<div class="field"><label>السعر بالدج *</label><input id="pPrice" type="number" min="0" placeholder="85000"></div>
+<div class="field"><label>السعر القديم</label><input id="pOld" type="number" min="0" placeholder="90000"></div>
+<div class="field"><label>الشارة</label><input id="pTag" placeholder="جديد / عرض / HOT"></div>
+<div class="field"><label>رابط صورة المنتج *</label><input id="pImg" type="url" placeholder="https://..."></div>
 </div>
+<div class="actions"><button class="save" id="addProduct">➕ إضافة المنتج</button><button class="secondary" id="clearProduct">مسح الحقول</button></div>
+<div id="productStatus" class="status"></div>
+<div id="productList"></div>
 </section>
-<section class="adminBox">
-<h2>🔗 روابط Binance Pay للمنتجات</h2>
-<div id="products"></div>
-</section>
-<section class="adminBox">
-<div class="note">⚠️ هذه اللوحة تعمل حاليًا بتخزين المتصفح (localStorage). يعني الإعدادات المحفوظة هنا تظهر على نفس الجهاز/المتصفح فقط، وليست قاعدة بيانات عامة لكل الزبائن. لا تضع أي API Key أو كلمة سر Binance هنا.</div>
-<br>
-<button class="save" id="save">💾 حفظ الإعدادات</button>
-<button class="reset" id="reset">إعادة الإعدادات</button>
-<div class="status" id="status"></div>
-</section>
+
+<section class="adminBox"><h2>💳 الدفع والتوصيل</h2>
+<div class="grid">
+<div class="field"><label>سعر 1 USDT بالدينار</label><input id="rate" type="number" min="1" step=".01"></div>
+<div class="field"><label>التوصيل مجاني عند تجاوز (USDT)</label><input id="threshold" type="number" min="0" step=".01"></div>
+<div class="field"><label>سعر التوصيل العادي (دج)</label><input id="shipping" type="number" min="0"></div>
 </div>
+<h3>🔗 روابط Binance Pay لكل منتج</h3><div id="payLinks"></div>
+<div class="actions"><button class="save" id="saveSettings">💾 حفظ إعدادات الدفع</button><button class="reset" id="resetSettings">إعادة الإعدادات</button></div>
+<div id="settingsStatus" class="status"></div>
+</section>
+
+<section class="adminBox"><div class="note">⚠️ تنبيه: هذه النسخة تحفظ المنتجات والإعدادات في <b>localStorage</b>، لذلك التغييرات تظهر على نفس الجهاز/المتصفح فقط. لكي تظهر المنتجات الجديدة لجميع الزبائن نربط اللوحة بقاعدة بيانات لاحقًا.</div></section>
+</div></div>
 <script>
-const products=[
-{id:1,name:"شاحن سريع USB-C 30W",img:"https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&w=700&q=80"},
-{id:2,name:"سماعات لاسلكية Premium",img:"https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?auto=format&fit=crop&w=700&q=80"},
-{id:3,name:"لوحة مفاتيح Gaming RGB",img:"https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=700&q=80"},
-{id:4,name:"مصباح LED ذكي",img:"https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=700&q=80"},
-{id:5,name:"حامل هاتف للسيارة",img:"https://images.unsplash.com/photo-1523206489230-c012c64b2b48?auto=format&fit=crop&w=700&q=80"},
-{id:6,name:"ساعة ذكية Sport",img:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=80"},
-{id:7,name:"حقيبة ظهر عملية",img:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=700&q=80"},
-{id:8,name:"شاحن سيارة Dual USB",img:"https://images.unsplash.com/photo-1617886322168-72b886573c90?auto=format&fit=crop&w=700&q=80"}];
-const defaults={rate:256,threshold:10,shipping:0,links:{}};
-let cfg={...defaults,...JSON.parse(localStorage.getItem("dz_admin_config")||"{}")};
-cfg.links={...defaults.links,...(cfg.links||{})};
-document.getElementById("rate").value=cfg.rate;
-document.getElementById("threshold").value=cfg.threshold;
-document.getElementById("shipping").value=cfg.shipping;
-document.getElementById("products").innerHTML=products.map(p=>`<div class="productRow"><img src="${p.img}" alt=""><div><b>#${p.id} — ${p.name}</b></div><input data-id="${p.id}" type="url" placeholder="https://pay.binance.com/..." value="${cfg.links[p.id]||""}"></div>`).join("");
-document.getElementById("save").onclick=()=>{
-const links={};document.querySelectorAll("[data-id]").forEach(i=>links[i.dataset.id]=i.value.trim());
-const next={rate:Number(document.getElementById("rate").value)||256,threshold:Number(document.getElementById("threshold").value)||10,shipping:Math.max(0,Number(document.getElementById("shipping").value)||0),links};
-localStorage.setItem("dz_admin_config",JSON.stringify(next));cfg=next;
-document.getElementById("status").textContent="✅ تم حفظ الإعدادات على هذا الجهاز.";
-};
-document.getElementById("reset").onclick=()=>{localStorage.removeItem("dz_admin_config");location.reload()};
-</script>
-</div>
-<script>
-const ADMIN_PASSWORD="koukou911";
-const login=()=>{const p=document.getElementById("adminPassword").value;if(p===ADMIN_PASSWORD){sessionStorage.setItem("dz_admin_auth","1");document.getElementById("adminLogin").style.display="none";document.getElementById("adminApp").style.display="block";}else{document.getElementById("loginError").textContent="❌ كلمة السر غير صحيحة";}};
-document.getElementById("loginBtn").onclick=login;document.getElementById("adminPassword").addEventListener("keydown",e=>{if(e.key==="Enter")login();});
-if(sessionStorage.getItem("dz_admin_auth")==="1"){document.getElementById("adminLogin").style.display="none";document.getElementById("adminApp").style.display="block";}
-</script>
-</body></html>
+const defaultProducts=[
+{id:1,name:"شاحن سريع USB-C 30W",cat:"electronics",price:2490,old:2990,tag:"الأكثر طلبًا",img:"https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&w=700&q=80"},
+{id:2,name:"سماعات لاسلكية Premium",cat:"phones",price:3490,old:4290,tag:"-19%",img:"https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?auto=format&fit=crop&w=700&q=80"},
+{id:3,name:"لوحة مفاتيح Gaming RGB",cat:"gaming",price:5990,old:6990,tag:"HOT",img:"https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=700&q=80"},
+{id:4,name:"مصباح LED ذكي",cat:"home",price:2990,old:3690,tag:"جديد",img:"https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=700&q=80"},
+{id:5,name:"حامل هاتف للسيارة",cat:"auto",price:1890,old:2290,tag:"عرض",img:"https://images.unsplash.com/photo-1523206489230-c012c64b2b48?auto=format&fit=crop&w=700&q=80"},
+{id:6,name:"ساعة ذكية Sport",cat:"phones",price:7490,old:8990,tag:"-17%",img:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=80"},
+{id:7,name:"حقيبة ظهر عملية",cat:"fashion",price:3990,old:4590,tag:"جديد",img:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=700&q=80"},
+{id:8,name:"شاحن سيارة Dual USB",cat:"auto",price:1590,old:1990,tag:"عرض",img:"https://images.unsplash.com/photo-1617886322168-72b886573c90?auto=format&fit=crop&w=700&q=80"}];
+let products=JSON.parse(localStorage.getItem("dz_products")||"null")||defaultProducts;
+let cfg={rate:256,threshold:10,shipping:0,links:{},...JSON.parse(localStorage.getItem("dz_admin_config")||"{}")};cfg.links={...(cfg.links||{})};
+const el=id=>document.getElementById(id);
+function renderProducts(){el("productList").innerHTML=products.length?products.map(p=>`<div class="productAdmin"><div class="productHead"><img src="${p.img}" alt=""><div><b>#${p.id} — ${p.name}</b><div class="muted">${p.price.toLocaleString("fr-DZ")} دج • ${p.cat}</div></div><button class="danger" onclick="deleteProduct(${p.id})">🗑️ حذف</button></div><div class="productFields"><input data-edit="name" data-id="${p.id}" value="${p.name}"><input data-edit="price" data-id="${p.id}" type="number" value="${p.price}"><input data-edit="old" data-id="${p.id}" type="number" value="${p.old||0}"><input data-edit="img" data-id="${p.id}" value="${p.img}"></div><button class="secondary" style="margin-top:10px" onclick="saveProduct(${p.id})">💾 حفظ تعديل المنتج</button></div>`).join(""):'<div class="empty">لا توجد منتجات.</div>';renderPayLinks();}
+function saveProducts(){localStorage.setItem("dz_products",JSON.stringify(products));}
+function deleteProduct(id){if(!confirm("حذف هذا المنتج؟"))return;products=products.filter(p=>p.id!==id);saveProducts();renderProducts();el("productStatus").textContent="✅ تم حذف المنتج.";}
+function saveProduct(id){const p=products.find(x=>x.id===id);if(!p)return;document.querySelectorAll('[data-id="'+id+'"]').forEach(i=>{if(i.dataset.edit==="name")p.name=i.value.trim()||p.name;if(i.dataset.edit==="price")p.price=Number(i.value)||0;if(i.dataset.edit==="old")p.old=Number(i.value)||0;if(i.dataset.edit==="img")p.img=i.value.trim()||p.img});saveProducts();renderProducts();el("productStatus").textContent="✅ تم تعديل المنتج.";}
+el("addProduct").onclick=()=>{const name=el("pName").value.trim(),price=Number(el("pPrice").value),img=el("pImg").value.trim();if(!name||!price||!img)return el("productStatus").textContent="❌ أدخل الاسم والسعر ورابط الصورة.";const id=products.length?Math.max(...products.map(p=>Number(p.id)))+1:1;products.push({id,name,cat:el("pCat").value,price,old:Number(el("pOld").value)||0,tag:el("pTag").value.trim()||"جديد",img});saveProducts();renderProducts();["pName","pPrice","pOld","pTag","pImg"].forEach(x=>el(x).value="");el("productStatus").textContent="✅ تمت إضافة المنتج."};
+el("clearProduct").onclick=()=>["pName","pPrice","pOld","pTag","pImg"].forEach(x=>el(x).value="");
+function renderPayLinks(){el("payLinks").innerHTML=products.map(p=>`<div class="productFields"><b>#${p.id} — ${p.name}</b><input data-pay="${p.id}" placeholder="رابط Binance Pay" value="${cfg.links[p.id]||""}></div>`).join("");}
+el("rate").value=cfg.rate;el("threshold").value=cfg.threshold;el("shipping").value=cfg.shipping;
+el("saveSettings").onclick=()=>{const links={};document.querySelectorAll("[data-pay]").forEach(i=>links[i.dataset.pay]=i.value.trim());cfg={rate:Number(el("rate").value)||256,threshold:Number(el("threshold").value)||10,shipping:Math.max(0,Number(el("shipping").value)||0),links};localStorage.setItem("dz_admin_config",JSON.stringify(cfg));el("settingsStatus").textContent="✅ تم حفظ إعدادات الدفع والتوصيل.";};
+el("resetSettings").onclick=()=>{localStorage.removeItem("dz_admin_config");location.reload();};
+const ADMIN_PASSWORD="koukou911";function login(){if(el("adminPassword").value===ADMIN_PASSWORD){sessionStorage.setItem("dz_admin_auth","1");el("adminLogin").style.display="none";el("adminApp").style.display="block";renderProducts();}else el("loginError").textContent="❌ كلمة السر غير صحيحة";}
+el("loginBtn").onclick=login;el("adminPassword").addEventListener("keydown",e=>{if(e.key==="Enter")login();});
+if(sessionStorage.getItem("dz_admin_auth")==="1"){el("adminLogin").style.display="none";el("adminApp").style.display="block";renderProducts();}
+</script></body></html>
