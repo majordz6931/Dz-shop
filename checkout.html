@@ -26,6 +26,12 @@ body{min-height:100vh}.checkoutPage{max-width:1000px;width:92%;margin:35px auto 
 <label><input type="radio" name="pay" value="binance" checked> 🟡 Binance Pay</label>
 <label><input type="radio" name="pay" value="usdt"> 🪙 USDT / BSC (BEP20)</label>
 </div>
+<div id="usdtInfo" class="payInfo" style="display:none">
+<b>🪙 الدفع عبر USDT — شبكة BSC (BEP20)</b>
+<p style="margin:8px 0">أرسل المبلغ المطلوب إلى العنوان التالي:</p>
+<div style="display:flex;gap:8px;align-items:center;direction:ltr"><input id="usdtAddress" value="0xD2Cb81A61b87833292fDE28bC328F523b98c7C7F" readonly style="flex:1;border:1px solid #dfe6e1;border-radius:10px;padding:10px;font-size:12px;background:#fff"><button type="button" id="copyUsdt" style="border:0;border-radius:10px;padding:10px;background:#0b7a3b;color:#fff;font-weight:bold;cursor:pointer">نسخ</button></div>
+<small style="display:block;margin-top:8px;color:#c62828;font-weight:bold">⚠️ الشبكة: BSC / BEP20 فقط</small>
+</div>
 <div class="payInfo" id="payInfo">اختر رابط Binance Pay الخاص بالمنتج من ملخص الطلب، أو استخدم QR العام.</div>
 <div class="binanceQR show" id="binanceQR">
 <img src="https://i.ibb.co/Gfj3Npjg/file-000000003c5881f4b8abeccf801ce036.png" alt="Binance Pay QR Code">
@@ -50,7 +56,7 @@ const wilayas=["أدرار","الشلف","الأغواط","أم البواقي",
 document.getElementById("wilaya").innerHTML+=wilayas.map((w,i)=>`<option value="${i+1}-${w}">${String(i+1).padStart(2,"0")} - ${w}</option>`).join("");
 const cart=JSON.parse(localStorage.getItem("dz_cart")||"[]"),money=n=>Number(n).toLocaleString("fr-DZ")+" دج";
 const cfg={rate:256,threshold:10,shipping:0,links:{},...JSON.parse(localStorage.getItem("dz_admin_config")||"{}")};
-const list=document.getElementById("orderList"),sum=document.getElementById("orderTotal"),ship=document.getElementById("shippingCost"),grand=document.getElementById("grandTotal"),note=document.getElementById("shippingNote"),qr=document.getElementById("binanceQR"),info=document.getElementById("payInfo");
+const usdtInfo=document.getElementById("usdtInfo"),copyUsdt=document.getElementById("copyUsdt"),list=document.getElementById("orderList"),sum=document.getElementById("orderTotal"),ship=document.getElementById("shippingCost"),grand=document.getElementById("grandTotal"),note=document.getElementById("shippingNote"),qr=document.getElementById("binanceQR"),info=document.getElementById("payInfo");
 const total=cart.reduce((s,p)=>s+Number(p.price),0),usdt=total/Number(cfg.rate||256),isFree=usdt>Number(cfg.threshold||10),shipping=isFree?0:Number(cfg.shipping||0);
 if(!cart.length){list.innerHTML='<div class="emptyOrder">السلة فارغة.<br><br><a class="back" href="index.html">العودة للمتجر</a></div>'}
 else{
@@ -60,9 +66,11 @@ note.innerHTML=isFree?'<span class="free">🎉 التوصيل مجاني!</span>
 }
 document.querySelectorAll('input[name="pay"]').forEach(x=>x.onchange=()=>{
 const binance=x.value==="binance";
+usdtInfo.style.display=binance?"none":"block";
 info.textContent=binance?"استعمل رابط Binance Pay الخاص بالمنتج أو QR العام، ثم ارفع إثبات الدفع.":"ادفع المبلغ عبر USDT على شبكة BSC (BEP20) ثم ارفع صورة إثبات الدفع.";
 qr.classList.toggle("show",binance);
 });
+copyUsdt.onclick=async()=>{try{await navigator.clipboard.writeText(document.getElementById("usdtAddress").value);copyUsdt.textContent="تم النسخ ✓";setTimeout(()=>copyUsdt.textContent="نسخ",1500)}catch(e){alert("انسخ العنوان يدويًا.");}};
 document.getElementById("submit").onclick=()=>{const email=document.getElementById("email").value.trim(),phone=document.getElementById("phone").value.trim(),wilaya=document.getElementById("wilaya").value,proof=document.getElementById("proof").files[0];if(!email||!email.includes("@"))return alert("أدخل بريدًا إلكترونيًا صحيحًا.");if(!phone)return alert("أدخل رقم الهاتف.");if(!wilaya)return alert("اختر الولاية.");if(!cart.length)return alert("السلة فارغة.");if(!proof)return alert("ارفع صورة إثبات الدفع.");document.getElementById("formView").style.display="none";document.getElementById("success").classList.add("show");localStorage.removeItem("dz_cart")};
 </script>
 </body></html>
