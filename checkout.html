@@ -64,7 +64,7 @@ body{min-height:100vh}.checkoutPage{max-width:1000px;width:92%;margin:35px auto 
 const db=supabase.createClient("https://aepywoejzaqtlbdexdba.supabase.co","sb_publishable_awJkvMcHjngOOI1fAfpQWA_dKnNFxiN");
 const wilayas=["أدرار","الشلف","الأغواط","أم البواقي","باتنة","بجاية","بسكرة","بشار","البليدة","البويرة","تمنراست","تبسة","تلمسان","تيارت","تيزي وزو","الجزائر","الجلفة","جيجل","سطيف","سعيدة","سكيكدة","سيدي بلعباس","عنابة","قالمة","قسنطينة","المدية","مستغانم","المسيلة","معسكر","ورقلة","وهران","البيض","إليزي","برج بوعريريج","بومرداس","الطارف","تندوف","تيسمسيلت","الوادي","خنشلة","سوق أهراس","تيبازة","ميلة","عين الدفلى","النعامة","عين تموشنت","غرداية","غليزان","تيميمون","برج باجي مختار","أولاد جلال","بني عباس","عين صالح","عين قزام","تقرت","جانت","المغير","المنيعة"];
 document.getElementById("wilaya").innerHTML+=wilayas.map((w,i)=>`<option value="${i+1}-${w}">${String(i+1).padStart(2,"0")} - ${w}</option>`).join("");
-const cart=JSON.parse(localStorage.getItem("dz_cart")||"[]"),money=n=>Number(n).toLocaleString("fr-DZ")+" دج";
+const cart=JSON.parse(localStorage.getItem("dz_cart")||"[]"),money=n=>Number(n).toFixed(2)+" USDT";
 let settings={usdt_dzd:256,free_shipping_threshold_usdt:10,shipping_dzd:0},payments=[];
 const usdtInfo=document.getElementById("usdtInfo"),solanaInfo=document.getElementById("solanaInfo"),copySolana=document.getElementById("copySolana"),copyUsdt=document.getElementById("copyUsdt"),list=document.getElementById("orderList"),sum=document.getElementById("orderTotal"),ship=document.getElementById("shippingCost"),grand=document.getElementById("grandTotal"),note=document.getElementById("shippingNote"),qr=document.getElementById("binanceQR"),info=document.getElementById("payInfo");
 async function loadConfig(){
@@ -76,10 +76,10 @@ async function loadConfig(){
 }
 function paymentId(value){const p=payments.find(x=>value==="binance"?x.name==="Binance Pay":value==="usdt"?x.name==="USDT BEP20":x.name==="USDT Solana");return p?.id||null}
 async function buildSummary(){
- const total=cart.reduce((s,p)=>s+Number(p.price),0),usdt=total/Number(settings.usdt_dzd||256),isFree=usdt>Number(settings.free_shipping_threshold_usdt||10),shipping=isFree?0:Number(settings.shipping_dzd||0);
+ const total=cart.reduce((s,p)=>s+Number(p.price),0),usdt=total,isFree=usdt>Number(settings.free_shipping_threshold_usdt||10),shipping=0;
  list.innerHTML=cart.length?cart.map(p=>'<div class="orderItem"><img src="'+p.img+'"><div><b>'+p.name+'</b><small>'+money(p.price)+'</small>'+(p.binance_pay_url?'<a class="productPay" target="_blank" rel="noopener" href="'+p.binance_pay_url+'">💳 دفع هذا المنتج عبر Binance Pay</a>':'')+'</div></div>').join(""):'<div class="emptyOrder">السلة فارغة.</div>';
  sum.textContent=money(total);ship.textContent=money(shipping);grand.textContent=money(total+shipping);
- note.innerHTML=isFree?'<span class="free">🎉 التوصيل مجاني!</span> طلبك يعادل تقريبًا '+usdt.toFixed(2)+' USDT.':'التوصيل: '+money(shipping)+' — يصبح مجانيًا عند تجاوز '+Number(settings.free_shipping_threshold_usdt||10)+' USDT.';
+ note.innerHTML=isFree?'<span class="free">🎉 التوصيل مجاني!</span> طلبك: '+usdt.toFixed(2)+' USDT.':'التوصيل مجاني لجميع الطلبات.';
  return {total,shipping,grand:total+shipping};
 }
 document.querySelectorAll('input[name="pay"]').forEach(x=>x.onchange=()=>{const v=x.value;usdtInfo.style.display=v==="usdt"?"block":"none";solanaInfo.style.display=v==="solana"?"block":"none";qr.classList.toggle("show",v==="binance");info.textContent=v==="binance"?"استعمل رابط Binance Pay أو QR العام ثم ارفع إثبات الدفع.":v==="usdt"?"أرسل USDT عبر BSC (BEP20) ثم ارفع إثبات الدفع.":"أرسل USDT عبر Solana ثم ارفع إثبات الدفع."});
