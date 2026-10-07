@@ -21,9 +21,22 @@ function add(id){const p=products.find(x=>String(x.id)===String(id));if(p)cart.p
 function update(){count.textContent=cart.length;items.innerHTML=cart.length?cart.map((p,i)=>`<div class="cartItem"><img src="${p.img}"><div><b>${p.name}</b><small>${money(p.price)}</small><button class="remove" onclick="removeItem(${i})">حذف</button></div></div>`).join(""):'<div class="empty">🛒<br><br>السلة فارغة حاليًا</div>';total.textContent=money(cart.reduce((s,p)=>s+Number(p.price),0))}
 function removeItem(i){cart.splice(i,1);localStorage.setItem("dz_cart",JSON.stringify(cart));update()}
 function openCart(){cartBox.classList.add("show");overlay.classList.add("show")}function closeCart(){cartBox.classList.remove("show");overlay.classList.remove("show")}
-function filter(cat){document.querySelectorAll(".cats button").forEach(b=>b.classList.toggle("active",b.dataset.cat===cat));let list=cat==="all"?products:cat==="offers"?products.filter(p=>p.tag==="عرض"||String(p.tag).includes("%")):products.filter(p=>p.cat===cat);render(list)}
+function filter(cat){document.querySelectorAll("[data-cat]").forEach(b=>b.classList.toggle("active",b.dataset.cat===cat));let list=cat==="all"?products:cat==="offers"?products.filter(p=>p.tag==="عرض"||String(p.tag).includes("%")||String(p.tag).toLowerCase().includes("offer")):products.filter(p=>String(p.cat).toLowerCase()===String(cat).toLowerCase());render(list);document.getElementById("title").textContent=cat==="all"?"الأكثر طلبًا":cat==="offers"?"🔥 العروض":(document.querySelector(`.cats button[data-cat="${cat}"]`)?.textContent||cat);window.scrollTo({top:document.querySelector(".products").offsetTop-90,behavior:"smooth"})}
 document.querySelectorAll("[data-cat]").forEach(b=>b.addEventListener("click",()=>filter(b.dataset.cat)));
-document.getElementById("search").addEventListener("input",e=>{const q=e.target.value.trim().toLowerCase();render(q?products.filter(p=>p.name.toLowerCase().includes(q)):products)});
+document.getElementById("search").addEventListener("input",e=>{const q=e.target.value.trim().toLowerCase();render(q?products.filter(p=>[p.name,p.cat,p.tag].some(v=>String(v||"").toLowerCase().includes(q))):products)});
 document.getElementById("openCart").onclick=openCart;document.getElementById("closeCart").onclick=closeCart;overlay.onclick=closeCart;
 document.getElementById("checkout").onclick=()=>{if(!cart.length)return alert("السلة فارغة.");localStorage.setItem("dz_cart",JSON.stringify(cart));location.href="checkout.html"};
 loadProducts();update();
+/* Mobile-first search & filter enhancements */
+@media(max-width:600px){
+  nav{gap:10px;padding:10px 4%;}
+  .logo b{width:40px;height:40px;border-radius:13px}.logo small{display:none}
+  .search{order:3;flex-basis:100%;max-width:none;margin-top:2px}
+  .search input{height:48px;border-radius:16px;padding-inline:44px 14px;font-size:14px}
+  .cats{position:sticky;top:61px;z-index:9;padding:8px 4%;gap:7px;box-shadow:0 5px 15px rgba(7,17,12,.05)}
+  .cats button{padding:10px 14px;font-size:12px;border:1px solid transparent}
+  .cats button.active{border-color:#bfe3cc}
+  .products{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-bottom:35px}
+  .product{border-radius:17px}.productImg{height:165px}.info{padding:11px}.info h3{font-size:13px;line-height:1.4;min-height:36px}.price strong{font-size:13px}.add{height:40px;font-size:12px}
+  .categoryGrid button{padding:15px 6px;border-radius:17px;font-size:23px}
+}
