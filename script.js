@@ -27,16 +27,3 @@ document.getElementById("search").addEventListener("input",e=>{const q=e.target.
 document.getElementById("openCart").onclick=openCart;document.getElementById("closeCart").onclick=closeCart;overlay.onclick=closeCart;
 document.getElementById("checkout").onclick=()=>{if(!cart.length)return alert("السلة فارغة.");localStorage.setItem("dz_cart",JSON.stringify(cart));location.href="checkout.html"};
 loadProducts();update();
-/* Mobile-first search & filter enhancements */
-@media(max-width:600px){
-  nav{gap:10px;padding:10px 4%;}
-  .logo b{width:40px;height:40px;border-radius:13px}.logo small{display:none}
-  .search{order:3;flex-basis:100%;max-width:none;margin-top:2px}
-  .search input{height:48px;border-radius:16px;padding-inline:44px 14px;font-size:14px}
-  .cats{position:sticky;top:61px;z-index:9;padding:8px 4%;gap:7px;box-shadow:0 5px 15px rgba(7,17,12,.05)}
-  .cats button{padding:10px 14px;font-size:12px;border:1px solid transparent}
-  .cats button.active{border-color:#bfe3cc}
-  .products{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-bottom:35px}
-  .product{border-radius:17px}.productImg{height:165px}.info{padding:11px}.info h3{font-size:13px;line-height:1.4;min-height:36px}.price strong{font-size:13px}.add{height:40px;font-size:12px}
-  .categoryGrid button{padding:15px 6px;border-radius:17px;font-size:23px}
-}
