@@ -11,3 +11,34 @@
 .lang-menu button:hover{background:#e8f5ed;color:#0b7a3b}
 [dir="rtl"] .lang-menu{left:auto;right:0}
 @media(max-width:600px){.lang-wrap{left:4%}.lang-trigger{padding:6px 10px}.lang-trigger span#currentLang{display:none}.lang-menu{min-width:145px}}
+
+/* DZ SHOP — modern checkout refresh */
+.checkoutPage{max-width:1120px!important;width:94%!important;margin:0 auto 70px!important}
+.checkoutPage .back{display:inline-flex!important;align-items:center;gap:8px!important;padding:9px 13px!important;border-radius:999px!important;background:#eaf7ef!important;color:#0b7a3b!important;font-size:13px!important}
+.checkoutPage .checkoutGrid{grid-template-columns:minmax(0,1.25fr) minmax(300px,.75fr)!important;gap:22px!important;align-items:start!important}
+.checkoutPage .box{border:1px solid #e4ebe6!important;border-radius:26px!important;padding:26px!important;box-shadow:0 12px 35px rgba(15,30,21,.06)!important}
+.checkoutPage .box h1{font-size:32px!important;letter-spacing:-.5px!important;margin-bottom:7px!important}
+.checkoutPage .box h2{font-size:20px!important;margin-bottom:18px!important}
+.checkoutPage .field{margin-bottom:17px!important}
+.checkoutPage .field label{font-size:12px!important;font-weight:800!important;color:#354239!important;margin-bottom:8px!important}
+.checkoutPage .field input,.checkoutPage .field textarea,.checkoutPage .field select{border:1px solid #dfe7e2!important;border-radius:14px!important;background:#fbfcfb!important;padding:13px 14px!important;transition:.2s!important}
+.checkoutPage .field input:focus,.checkoutPage .field textarea:focus,.checkoutPage .field select:focus{border-color:#0b7a3b!important;box-shadow:0 0 0 3px rgba(11,122,59,.08)!important}
+.checkoutPage .payment{grid-template-columns:repeat(3,1fr)!important;gap:10px!important}
+.checkoutPage .payment label{min-height:70px!important;border:1px solid #e1e8e3!important;border-radius:16px!important;padding:13px!important;font-size:12px!important;font-weight:800!important;transition:.2s!important}
+.checkoutPage .payment label:has(input:checked){border-color:#0b7a3b!important;background:#effaf3!important;box-shadow:0 5px 18px rgba(11,122,59,.08)!important}
+.checkoutPage .payInfo{background:#f4f8f5!important;border:1px solid #e0e9e3!important;border-radius:17px!important;padding:16px!important}
+.checkoutPage .binanceQR{padding:15px!important;background:#fafcfb!important;border:1px solid #e5ebe7!important;border-radius:18px!important}
+.checkoutPage .binanceQR img{width:min(220px,100%)!important;border-radius:16px!important}
+.checkoutPage .upload{border:2px dashed #b8c9be!important;border-radius:18px!important;padding:22px!important;background:#fbfdfc!important}
+.checkoutPage .submit{border-radius:15px!important;background:#0b7a3b!important;box-shadow:0 8px 20px rgba(11,122,59,.14)!important;transition:.2s!important}
+.checkoutPage .submit:hover{background:#086632!important;transform:translateY(-1px)!important}
+.checkoutPage .orderItem{padding:11px!important;background:#f8faf9!important;border:1px solid #edf1ee!important;border-radius:16px!important}
+.checkoutPage .orderItem img{width:64px!important;height:64px!important;border-radius:13px!important}
+.checkoutPage .shipping{padding:13px!important;border-radius:14px!important;background:#eaf7ef!important}
+.checkoutPage .success{padding:55px 25px!important}
+.checkoutPage .success .icon{width:76px!important;height:76px!important;border-radius:24px!important;background:#eaf7ef!important;display:grid!important;place-items:center!important;margin:0 auto 18px!important}
+#language{position:static!important;display:flex!important;gap:4px!important;background:#fff!important;border:1px solid #e2e9e4!important;border-radius:999px!important;padding:4px!important;box-shadow:0 4px 14px rgba(7,17,12,.06)!important}
+#language button{border:0!important;background:transparent!important;border-radius:999px!important;padding:7px 10px!important;font-size:11px!important;font-weight:800!important;color:#68746d!important}
+#language button:hover{background:#eaf7ef!important;color:#0b7a3b!important}
+@media(max-width:800px){.checkoutPage .checkoutGrid{grid-template-columns:1fr!important}.checkoutPage .payment{grid-template-columns:1fr!important}.checkoutPage .box{padding:20px!important}.checkoutPage .box h1{font-size:27px!important}}
+@media(max-width:500px){.checkoutPage{width:92%!important}.checkoutPage .box{padding:18px!important;border-radius:21px!important}.checkoutPage .orderItem img{width:58px!important;height:58px!important}}
