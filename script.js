@@ -5,10 +5,10 @@ const grid=document.getElementById("productsGrid"),count=document.getElementById
 let cart=JSON.parse(localStorage.getItem("dz_cart")||"[]");
 async function loadProducts(){
  const {data,error}=await window.supabaseClient.from("products").select("*").eq("active",true).order("sort_order",{ascending:true});
- products=(error||!data?.length)?defaultProducts:data.map(p=>({id:p.id,name:p.name,cat:p.category,price:Number(p.price),old:Number(p.old_price||0),tag:p.tag||"جديد",img:p.image_url}));
+ products=(error||!data?.length)?defaultProducts:data.map(p=>({id:p.id,name:p.name,cat:p.category,price:Number(p.price),old:Number(p.old_price||0),tag:p.tag||"جديد",img:p.image_url,imgs:Array.isArray(p.image_urls)&&p.image_urls.length?p.image_urls:[p.image_url]}));
  render();update();
 }
-function render(list=products){grid.innerHTML=list.length?list.map(p=>`<article class="product"><div class="productImg"><img src="${p.img}" alt="${p.name}"><span class="tag">${p.tag}</span></div><div class="info"><h3>${p.name}</h3><div class="stars">★★★★★</div><div class="price"><strong>${money(p.price)}</strong>${p.old?'<span class="old">'+money(p.old)+'</span>':''}</div><button class="add" onclick="add('${p.id}')">+ أضف إلى السلة</button></div></article>`).join(""):'<div class="empty">لا توجد منتجات مطابقة.</div>'}
+function render(list=products){grid.innerHTML=list.length?list.map(p=>`<article class="product"><div class="productImg"><img src="${p.img}" alt="${p.name}"><span class="tag">${p.tag}</span>${p.imgs?.length>1?`<span class="photoCount">📷 ${p.imgs.length}</span>`:""}</div><div class="info"><h3>${p.name}</h3><div class="stars">★★★★★</div><div class="price"><strong>${money(p.price)}</strong>${p.old?'<span class="old">'+money(p.old)+'</span>':''}</div><button class="add" onclick="add('${p.id}')">+ أضف إلى السلة</button></div></article>`).join(""):'<div class="empty">لا توجد منتجات مطابقة.</div>'}
 function add(id){const p=products.find(x=>String(x.id)===String(id));if(p)cart.push(p);localStorage.setItem("dz_cart",JSON.stringify(cart));update();openCart()}
 function update(){count.textContent=cart.length;items.innerHTML=cart.length?cart.map((p,i)=>`<div class="cartItem"><img src="${p.img}"><div><b>${p.name}</b><small>${money(p.price)}</small><button class="remove" onclick="removeItem(${i})">حذف</button></div></div>`).join(""):'<div class="empty">🛒<br><br>السلة فارغة حاليًا</div>';total.textContent=money(cart.reduce((s,p)=>s+Number(p.price),0))}
 function removeItem(i){cart.splice(i,1);localStorage.setItem("dz_cart",JSON.stringify(cart));update()}
