@@ -60,27 +60,45 @@ body{min-height:100vh}.checkoutPage{max-width:1000px;width:92%;margin:35px auto 
 </div></div>
 <div class="box success" id="success"><div class="icon">✅</div><h1>تم إرسال طلبك</h1><p class="muted">تم تسجيل معلومات الطلب. سنتواصل معك عبر البريد الإلكتروني.</p><a class="submit" style="display:block;text-decoration:none" href="index.html">العودة إلى المتجر</a></div>
 </div>
-<script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
+const db=supabase.createClient("https://aepywoejzaqtlbdexdba.supabase.co","sb_publishable_awJkvMcHjngOOI1fAfpQWA_dKnNFxiN");
 const wilayas=["أدرار","الشلف","الأغواط","أم البواقي","باتنة","بجاية","بسكرة","بشار","البليدة","البويرة","تمنراست","تبسة","تلمسان","تيارت","تيزي وزو","الجزائر","الجلفة","جيجل","سطيف","سعيدة","سكيكدة","سيدي بلعباس","عنابة","قالمة","قسنطينة","المدية","مستغانم","المسيلة","معسكر","ورقلة","وهران","البيض","إليزي","برج بوعريريج","بومرداس","الطارف","تندوف","تيسمسيلت","الوادي","خنشلة","سوق أهراس","تيبازة","ميلة","عين الدفلى","النعامة","عين تموشنت","غرداية","غليزان","تيميمون","برج باجي مختار","أولاد جلال","بني عباس","عين صالح","عين قزام","تقرت","جانت","المغير","المنيعة"];
 document.getElementById("wilaya").innerHTML+=wilayas.map((w,i)=>`<option value="${i+1}-${w}">${String(i+1).padStart(2,"0")} - ${w}</option>`).join("");
 const cart=JSON.parse(localStorage.getItem("dz_cart")||"[]"),money=n=>Number(n).toLocaleString("fr-DZ")+" دج";
-const cfg={rate:256,threshold:10,shipping:0,links:{},...JSON.parse(localStorage.getItem("dz_admin_config")||"{}")};
+let settings={usdt_dzd:256,free_shipping_threshold_usdt:10,shipping_dzd:0},payments=[];
 const usdtInfo=document.getElementById("usdtInfo"),solanaInfo=document.getElementById("solanaInfo"),copySolana=document.getElementById("copySolana"),copyUsdt=document.getElementById("copyUsdt"),list=document.getElementById("orderList"),sum=document.getElementById("orderTotal"),ship=document.getElementById("shippingCost"),grand=document.getElementById("grandTotal"),note=document.getElementById("shippingNote"),qr=document.getElementById("binanceQR"),info=document.getElementById("payInfo");
-const total=cart.reduce((s,p)=>s+Number(p.price),0),usdt=total/Number(cfg.rate||256),isFree=usdt>Number(cfg.threshold||10),shipping=isFree?0:Number(cfg.shipping||0);
-if(!cart.length){list.innerHTML='<div class="emptyOrder">السلة فارغة.<br><br><a class="back" href="index.html">العودة للمتجر</a></div>'}
-else{
-list.innerHTML=cart.map(p=>'<div class="orderItem"><img src="'+p.img+'"><div><b>'+p.name+'</b><small>'+money(p.price)+'</small>'+(cfg.links[p.id]?'<a class="productPay" target="_blank" rel="noopener" href="'+cfg.links[p.id]+'">💳 دفع هذا المنتج عبر Binance Pay</a>':'')+'</div></div>').join("");
-sum.textContent=money(total);ship.textContent=money(shipping);grand.textContent=money(total+shipping);
-note.innerHTML=isFree?'<span class="free">🎉 التوصيل مجاني!</span> طلبك يعادل تقريبًا '+usdt.toFixed(2)+' USDT، وهو أكثر من '+Number(cfg.threshold||10)+' USDT.':'التوصيل: '+money(shipping)+' — التوصيل يصبح مجانيًا عند تجاوز '+Number(cfg.threshold||10)+' USDT.';
+async function loadConfig(){
+ const s=await db.from("store_settings").select("*").eq("id","main").maybeSingle();if(s.data)settings=s.data;
+ const p=await db.from("payment_methods").select("*").eq("active",true).order("sort_order");payments=p.data||[];
+ const bep=payments.find(x=>x.name==="USDT BEP20"),sol=payments.find(x=>x.name==="USDT Solana");
+ if(bep?.details?.address){document.getElementById("usdtAddress").value=bep.details.address;document.querySelector("#usdtInfo img").src="https://quickchart.io/qr?text="+encodeURIComponent(bep.details.address)+"&size=280"}
+ if(sol?.details?.address){document.getElementById("solanaAddress").value=sol.details.address;document.querySelector("#solanaInfo img").src="https://quickchart.io/qr?text="+encodeURIComponent(sol.details.address)+"&size=280"}
 }
-document.querySelectorAll('input[name="pay"]').forEach(x=>x.onchange=()=>{
-const binance=x.value==="binance";
-usdtInfo.style.display=(x.value==="usdt")?"block":"none";solanaInfo.style.display=(x.value==="solana")?"block":"none";
-info.textContent=binance?"استعمل رابط Binance Pay الخاص بالمنتج أو QR العام، ثم ارفع إثبات الدفع.":"ادفع المبلغ عبر USDT على شبكة BSC (BEP20) ثم ارفع صورة إثبات الدفع.";
-qr.classList.toggle("show",binance);
-});
-copySolana.onclick=async()=>{try{await navigator.clipboard.writeText(document.getElementById("solanaAddress").value);copySolana.textContent="تم النسخ ✓";setTimeout(()=>copySolana.textContent="نسخ",1500)}catch(e){alert("انسخ العنوان يدويًا.");}};
-copyUsdt.onclick=async()=>{try{await navigator.clipboard.writeText(document.getElementById("usdtAddress").value);copyUsdt.textContent="تم النسخ ✓";setTimeout(()=>copyUsdt.textContent="نسخ",1500)}catch(e){alert("انسخ العنوان يدويًا.");}};
-document.getElementById("submit").onclick=()=>{const email=document.getElementById("email").value.trim(),phone=document.getElementById("phone").value.trim(),wilaya=document.getElementById("wilaya").value,proof=document.getElementById("proof").files[0];if(!email||!email.includes("@"))return alert("أدخل بريدًا إلكترونيًا صحيحًا.");if(!phone)return alert("أدخل رقم الهاتف.");if(!wilaya)return alert("اختر الولاية.");if(!cart.length)return alert("السلة فارغة.");if(!proof)return alert("ارفع صورة إثبات الدفع.");document.getElementById("formView").style.display="none";document.getElementById("success").classList.add("show");localStorage.removeItem("dz_cart")};
+function paymentId(value){const p=payments.find(x=>value==="binance"?x.name==="Binance Pay":value==="usdt"?x.name==="USDT BEP20":x.name==="USDT Solana");return p?.id||null}
+async function buildSummary(){
+ const total=cart.reduce((s,p)=>s+Number(p.price),0),usdt=total/Number(settings.usdt_dzd||256),isFree=usdt>Number(settings.free_shipping_threshold_usdt||10),shipping=isFree?0:Number(settings.shipping_dzd||0);
+ list.innerHTML=cart.length?cart.map(p=>'<div class="orderItem"><img src="'+p.img+'"><div><b>'+p.name+'</b><small>'+money(p.price)+'</small>'+(p.binance_pay_url?'<a class="productPay" target="_blank" rel="noopener" href="'+p.binance_pay_url+'">💳 دفع هذا المنتج عبر Binance Pay</a>':'')+'</div></div>').join(""):'<div class="emptyOrder">السلة فارغة.</div>';
+ sum.textContent=money(total);ship.textContent=money(shipping);grand.textContent=money(total+shipping);
+ note.innerHTML=isFree?'<span class="free">🎉 التوصيل مجاني!</span> طلبك يعادل تقريبًا '+usdt.toFixed(2)+' USDT.':'التوصيل: '+money(shipping)+' — يصبح مجانيًا عند تجاوز '+Number(settings.free_shipping_threshold_usdt||10)+' USDT.';
+ return {total,shipping,grand:total+shipping};
+}
+document.querySelectorAll('input[name="pay"]').forEach(x=>x.onchange=()=>{const v=x.value;usdtInfo.style.display=v==="usdt"?"block":"none";solanaInfo.style.display=v==="solana"?"block":"none";qr.classList.toggle("show",v==="binance");info.textContent=v==="binance"?"استعمل رابط Binance Pay أو QR العام ثم ارفع إثبات الدفع.":v==="usdt"?"أرسل USDT عبر BSC (BEP20) ثم ارفع إثبات الدفع.":"أرسل USDT عبر Solana ثم ارفع إثبات الدفع."});
+copySolana.onclick=async()=>{try{await navigator.clipboard.writeText(document.getElementById("solanaAddress").value);copySolana.textContent="تم النسخ ✓";setTimeout(()=>copySolana.textContent="نسخ",1500)}catch(e){alert("انسخ العنوان يدويًا.")}};
+copyUsdt.onclick=async()=>{try{await navigator.clipboard.writeText(document.getElementById("usdtAddress").value);copyUsdt.textContent="تم النسخ ✓";setTimeout(()=>copyUsdt.textContent="نسخ",1500)}catch(e){alert("انسخ العنوان يدويًا.")}};
+document.getElementById("submit").onclick=async()=>{
+ const email=document.getElementById("email").value.trim(),phone=document.getElementById("phone").value.trim(),wilaya=document.getElementById("wilaya").value,proof=document.getElementById("proof").files[0],pay=document.querySelector('input[name="pay"]:checked')?.value;
+ if(!email||!email.includes("@"))return alert("أدخل بريدًا إلكترونيًا صحيحًا.");if(!phone)return alert("أدخل رقم الهاتف.");if(!wilaya)return alert("اختر الولاية.");if(!cart.length)return alert("السلة فارغة.");if(!proof)return alert("ارفع صورة إثبات الدفع.");if(proof.size>5*1024*1024)return alert("صورة الدفع يجب ألا تتجاوز 5MB.");
+ const btn=document.getElementById("submit");btn.disabled=true;btn.textContent="جاري إرسال الطلب...";
+ try{
+  const totals=await buildSummary(),path="proofs/"+crypto.randomUUID()+"-"+proof.name.replace(/[^a-zA-Z0-9._-]/g,"_");
+  const up=await db.storage.from("payment-proofs").upload(path,proof,{contentType:proof.type,upsert:false});if(up.error)throw up.error;
+  const order={customer_name:"زبون DZ SHOP",phone,email,wilaya,notes:document.getElementById("note").value.trim(),payment_method_id:paymentId(pay),payment_proof_url:path,total:totals.grand,status:"pending"};
+  const ins=await db.from("orders").insert(order).select().single();if(ins.error)throw ins.error;
+  const rows=cart.map(p=>({order_id:ins.data.id,product_id:p.id,product_name:p.name,unit_price:Number(p.price),quantity:1,subtotal:Number(p.price)}));
+  const oi=await db.from("order_items").insert(rows);if(oi.error)throw oi.error;
+  localStorage.removeItem("dz_cart");document.getElementById("formView").style.display="none";document.getElementById("success").classList.add("show");
+ }catch(e){console.error(e);alert("تعذر إرسال الطلب: "+(e.message||"خطأ غير معروف"));btn.disabled=false;btn.textContent="تأكيد وإرسال الطلب";}
+};
+await loadConfig();await buildSummary();
 </script>
 </body></html>
