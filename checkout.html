@@ -93,9 +93,7 @@ document.getElementById("submit").onclick=async()=>{
   const totals=await buildSummary(),path="proofs/"+crypto.randomUUID()+"-"+proof.name.replace(/[^a-zA-Z0-9._-]/g,"_");
   const up=await db.storage.from("payment-proofs").upload(path,proof,{contentType:proof.type,upsert:false});if(up.error)throw up.error;
   const order={customer_name:"زبون DZ SHOP",phone,email,wilaya,notes:document.getElementById("note").value.trim(),payment_method_id:paymentId(pay),payment_proof_url:path,total:totals.grand,status:"pending"};
-  const ins=await db.from("orders").insert(order).select().single();if(ins.error)throw ins.error;
-  const rows=cart.map(p=>({order_id:ins.data.id,product_id:p.id,product_name:p.name,unit_price:Number(p.price),quantity:1,subtotal:Number(p.price)}));
-  const oi=await db.from("order_items").insert(rows);if(oi.error)throw oi.error;
+  const items=cart.map(p=>({product_id:p.id,quantity:1}));const rpc=await db.rpc("create_order",{p_customer_name:"زبون DZ SHOP",p_phone:phone,p_email:email,p_wilaya:wilaya,p_municipality:"غير محدد",p_payment_method_id:paymentId(pay),p_payment_proof_url:path,p_items:items,p_notes:document.getElementById("note").value.trim()});if(rpc.error)throw rpc.error;
   localStorage.removeItem("dz_cart");document.getElementById("formView").style.display="none";document.getElementById("success").classList.add("show");
  }catch(e){console.error(e);alert("تعذر إرسال الطلب: "+(e.message||"خطأ غير معروف"));btn.disabled=false;btn.textContent="تأكيد وإرسال الطلب";}
 };
