@@ -10,6 +10,15 @@
 </style>
 </head>
 <body>
+<div id="adminLogin" style="position:fixed;inset:0;background:#07110c;display:flex;align-items:center;justify-content:center;z-index:99999;padding:20px;box-sizing:border-box">
+<div style="background:#fff;width:min(420px,100%);padding:28px;border-radius:24px;box-shadow:0 20px 60px #0008;text-align:center">
+<div style="font-size:42px">🔐</div><h2 style="margin:10px 0 6px">دخول لوحة التحكم</h2>
+<p style="color:#68746d;font-size:14px">أدخل كلمة السر للمتابعة</p>
+<input id="adminPassword" type="password" autocomplete="current-password" placeholder="كلمة السر" style="width:100%;box-sizing:border-box;padding:14px;border:1px solid #dfe6e1;border-radius:13px;margin:10px 0">
+<button id="loginBtn" style="width:100%;background:#0b7a3b;color:#fff;border:0;padding:14px;border-radius:13px;font-weight:bold;cursor:pointer">دخول</button>
+<div id="loginError" style="color:#c62828;font-weight:bold;margin-top:10px;min-height:20px"></div>
+</div></div>
+<div id="adminApp" style="display:none">
 <div class="top">🇩🇿 DZ SHOP • لوحة التحكم</div>
 <div class="adminPage">
 <a class="link" href="index.html">← العودة إلى المتجر</a>
@@ -58,5 +67,12 @@ localStorage.setItem("dz_admin_config",JSON.stringify(next));cfg=next;
 document.getElementById("status").textContent="✅ تم حفظ الإعدادات على هذا الجهاز.";
 };
 document.getElementById("reset").onclick=()=>{localStorage.removeItem("dz_admin_config");location.reload()};
+</script>
+</div>
+<script>
+const ADMIN_PASSWORD="koukou911";
+const login=()=>{const p=document.getElementById("adminPassword").value;if(p===ADMIN_PASSWORD){sessionStorage.setItem("dz_admin_auth","1");document.getElementById("adminLogin").style.display="none";document.getElementById("adminApp").style.display="block";}else{document.getElementById("loginError").textContent="❌ كلمة السر غير صحيحة";}};
+document.getElementById("loginBtn").onclick=login;document.getElementById("adminPassword").addEventListener("keydown",e=>{if(e.key==="Enter")login();});
+if(sessionStorage.getItem("dz_admin_auth")==="1"){document.getElementById("adminLogin").style.display="none";document.getElementById("adminApp").style.display="block";}
 </script>
 </body></html>
