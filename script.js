@@ -1,5 +1,11 @@
 const defaultProducts=[{id:1,name:"شاحن سريع USB-C 30W",cat:"electronics",price:2490,old:2990,tag:"الأكثر طلبًا",img:"https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&w=700&q=80"},{id:2,name:"سماعات لاسلكية Premium",cat:"phones",price:3490,old:4290,tag:"-19%",img:"https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?auto=format&fit=crop&w=700&q=80"},{id:3,name:"لوحة مفاتيح Gaming RGB",cat:"gaming",price:5990,old:6990,tag:"HOT",img:"https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=700&q=80"},{id:4,name:"مصباح LED ذكي",cat:"home",price:2990,old:3690,tag:"جديد",img:"https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=700&q=80"},{id:5,name:"حامل هاتف للسيارة",cat:"auto",price:1890,old:2290,tag:"عرض",img:"https://images.unsplash.com/photo-1523206489230-c012c64b2b48?auto=format&fit=crop&w=700&q=80"},{id:6,name:"ساعة ذكية Sport",cat:"phones",price:7490,old:8990,tag:"-17%",img:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=80"},{id:7,name:"حقيبة ظهر عملية",cat:"fashion",price:3990,old:4590,tag:"جديد",img:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=700&q=80"},{id:8,name:"شاحن سيارة Dual USB",cat:"auto",price:1590,old:1990,tag:"عرض",img:"https://images.unsplash.com/photo-1617886322168-72b886573c90?auto=format&fit=crop&w=700&q=80"}];;
 let products=[];
+const emergencyProducts=[
+{id:"db-1",name:"MSI GeForce RTX 3060 GAMING X 12G",cat:"gaming",price:207,old:0,tag:"جديد",img:"https://aepywoejzaqtlbdexdba.supabase.co/storage/v1/object/public/product-images/17704951-4a55-4f6f-b4d5-0c1ccce44e44/17704951-4a55-4f6f-b4d5-0c1ccce44e44-0.png"},
+{id:"db-2",name:"Poco X6 Pro 12/512GB",cat:"phones",price:165,old:0,tag:"جديد",img:"https://aepywoejzaqtlbdexdba.supabase.co/storage/v1/object/public/product-images/17704951-4a55-4f6f-b4d5-0c1ccce44e44/17704951-4a55-4f6f-b4d5-0c1ccce44e44-0.png"},
+{id:"db-3",name:"Casque Gamer Sans Fil SPIRIT OF GAMER XPERT-H1500",cat:"gaming",price:12,old:0,tag:"جديد",img:"https://aepywoejzaqtlbdexdba.supabase.co/storage/v1/object/public/product-images/17704951-4a55-4f6f-b4d5-0c1ccce44e44/17704951-4a55-4f6f-b4d5-0c1ccce44e44-0.png"},
+{id:"db-4",name:"RTX 2060 Super 8GB",cat:"gaming",price:148,old:0,tag:"جديد",img:"https://aepywoejzaqtlbdexdba.supabase.co/storage/v1/object/public/product-images/17704951-4a55-4f6f-b4d5-0c1ccce44e44/17704951-4a55-4f6f-b4d5-0c1ccce44e44-0.png"},
+{id:"db-5",name:"RAM CORSAIR VENGEANCE RGB RS 8GB",cat:"gaming",price:25,old:0,tag:"جديد",img:"https://aepywoejzaqtlbdexdba.supabase.co/storage/v1/object/public/product-images/17704951-4a55-4f6f-b4d5-0c1ccce44e44/17704951-4a55-4f6f-b4d5-0c1ccce44e44-0.png"}];
 const money=n=>Number(n).toFixed(2)+" USDT";
 const grid=document.getElementById("productsGrid"),count=document.getElementById("count"),items=document.getElementById("cartItems"),total=document.getElementById("total"),cartBox=document.getElementById("cart"),overlay=document.getElementById("overlay");
 let cart=JSON.parse(localStorage.getItem("dz_cart")||"[]");
@@ -14,7 +20,7 @@ async function loadProducts(){
    tag:p.tag||"جديد",img:p.image_url,
    imgs:Array.isArray(p.image_urls)&&p.image_urls.length?p.image_urls:[p.image_url],
    binance_pay_url:p.binance_pay_url||""
-  })):defaultProducts;
+  })):emergencyProducts;
  }catch(e){
   console.error("DZ SHOP: failed to load products from Supabase:",e);
   products=defaultProducts;
