@@ -42,3 +42,4 @@
 #language button:hover{background:#eaf7ef!important;color:#0b7a3b!important}
 @media(max-width:800px){.checkoutPage .checkoutGrid{grid-template-columns:1fr!important}.checkoutPage .payment{grid-template-columns:1fr!important}.checkoutPage .box{padding:20px!important}.checkoutPage .box h1{font-size:27px!important}}
 @media(max-width:500px){.checkoutPage{width:92%!important}.checkoutPage .box{padding:18px!important;border-radius:21px!important}.checkoutPage .orderItem img{width:58px!important;height:58px!important}}
+undefined
