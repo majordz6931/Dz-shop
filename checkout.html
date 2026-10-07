@@ -18,6 +18,8 @@ body{min-height:100vh}.checkoutPage{max-width:1000px;width:92%;margin:35px auto 
 <section class="box">
 <h1>إتمام الطلب</h1><p class="muted">أدخل معلوماتك ثم ادفع وارفع إثبات الدفع.</p>
 <div class="field"><label>البريد الإلكتروني *</label><input id="email" type="email" placeholder="example@email.com" required></div>
+<div class="field"><label>رقم الهاتف *</label><input id="phone" type="tel" inputmode="tel" placeholder="05 XX XX XX XX" required></div>
+<div class="field"><label>الولاية *</label><select id="wilaya" required style="width:100%;border:1px solid #dfe6e1;border-radius:13px;padding:13px;background:#fafcfb;outline:0"><option value="">اختر الولاية</option></select></div>
 <div class="field"><label>ملاحظات الطلب</label><textarea id="note" rows="3" placeholder="أي ملاحظة إضافية..."></textarea></div>
 <h3>طريقة الدفع</h3>
 <div class="payment">
@@ -44,6 +46,8 @@ body{min-height:100vh}.checkoutPage{max-width:1000px;width:92%;margin:35px auto 
 <div class="box success" id="success"><div class="icon">✅</div><h1>تم إرسال طلبك</h1><p class="muted">تم تسجيل معلومات الطلب. سنتواصل معك عبر البريد الإلكتروني.</p><a class="submit" style="display:block;text-decoration:none" href="index.html">العودة إلى المتجر</a></div>
 </div>
 <script>
+const wilayas=["أدرار","الشلف","الأغواط","أم البواقي","باتنة","بجاية","بسكرة","بشار","البليدة","البويرة","تمنراست","تبسة","تلمسان","تيارت","تيزي وزو","الجزائر","الجلفة","جيجل","سطيف","سعيدة","سكيكدة","سيدي بلعباس","عنابة","قالمة","قسنطينة","المدية","مستغانم","المسيلة","معسكر","ورقلة","وهران","البيض","إليزي","برج بوعريريج","بومرداس","الطارف","تندوف","تيسمسيلت","الوادي","خنشلة","سوق أهراس","تيبازة","ميلة","عين الدفلى","النعامة","عين تموشنت","غرداية","غليزان","تيميمون","برج باجي مختار","أولاد جلال","بني عباس","عين صالح","عين قزام","تقرت","جانت","المغير","المنيعة"];
+document.getElementById("wilaya").innerHTML+=wilayas.map((w,i)=>`<option value="${i+1}-${w}">${String(i+1).padStart(2,"0")} - ${w}</option>`).join("");
 const cart=JSON.parse(localStorage.getItem("dz_cart")||"[]"),money=n=>Number(n).toLocaleString("fr-DZ")+" دج";
 const cfg={rate:256,threshold:10,shipping:0,links:{},...JSON.parse(localStorage.getItem("dz_admin_config")||"{}")};
 const list=document.getElementById("orderList"),sum=document.getElementById("orderTotal"),ship=document.getElementById("shippingCost"),grand=document.getElementById("grandTotal"),note=document.getElementById("shippingNote"),qr=document.getElementById("binanceQR"),info=document.getElementById("payInfo");
@@ -59,6 +63,6 @@ const binance=x.value==="binance";
 info.textContent=binance?"استعمل رابط Binance Pay الخاص بالمنتج أو QR العام، ثم ارفع إثبات الدفع.":"ادفع المبلغ عبر USDT على شبكة BSC (BEP20) ثم ارفع صورة إثبات الدفع.";
 qr.classList.toggle("show",binance);
 });
-document.getElementById("submit").onclick=()=>{const email=document.getElementById("email").value.trim(),proof=document.getElementById("proof").files[0];if(!email||!email.includes("@"))return alert("أدخل بريدًا إلكترونيًا صحيحًا.");if(!cart.length)return alert("السلة فارغة.");if(!proof)return alert("ارفع صورة إثبات الدفع.");document.getElementById("formView").style.display="none";document.getElementById("success").classList.add("show");localStorage.removeItem("dz_cart")};
+document.getElementById("submit").onclick=()=>{const email=document.getElementById("email").value.trim(),phone=document.getElementById("phone").value.trim(),wilaya=document.getElementById("wilaya").value,proof=document.getElementById("proof").files[0];if(!email||!email.includes("@"))return alert("أدخل بريدًا إلكترونيًا صحيحًا.");if(!phone)return alert("أدخل رقم الهاتف.");if(!wilaya)return alert("اختر الولاية.");if(!cart.length)return alert("السلة فارغة.");if(!proof)return alert("ارفع صورة إثبات الدفع.");document.getElementById("formView").style.display="none";document.getElementById("success").classList.add("show");localStorage.removeItem("dz_cart")};
 </script>
 </body></html>
